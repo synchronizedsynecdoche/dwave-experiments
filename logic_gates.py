@@ -1,3 +1,4 @@
+#https://docs.ocean.dwavesys.com/en/stable/examples/multi_gate.html
 import dwavebinarycsp
  
 def strange(a,b):

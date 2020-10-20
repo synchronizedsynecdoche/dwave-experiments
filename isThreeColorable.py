@@ -49,3 +49,4 @@ if not csp.check(sample):
     print("Likely not 3-colorable")
 else:
     plot_map(sample)
+    
