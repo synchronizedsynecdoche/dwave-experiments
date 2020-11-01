@@ -72,10 +72,11 @@ for neighbor in edges:
 bqm = dwavebinarycsp.stitch(csp)
 
     
-sampler = DWaveSampler()
+sampler = DWaveSampler(solver={'topology__type': 'pegasus'})
 embedding = EmbeddingComposite(sampler)
-sampleset = embedding.sample(bqm, num_reads=10000)
-backup("US Map Chimera",sampleset)
+sampleset = embedding.sample(bqm, num_reads=1000)
+backup("US Map Pegasus",sampleset)
+
 for sample in sampleset: 
     if csp.check(sample): # works with the simulator...
         print("OK!")

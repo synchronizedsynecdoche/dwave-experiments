@@ -28,7 +28,7 @@ def plot_map(sample):
     # Plot the sample with color-coded nodes
     node_colors = [color_map.get(node) for node in G.nodes()]
     nx.draw_circular(G, with_labels=True, node_color=node_colors, node_size=3000, cmap=plt.cm.rainbow)
-    plt.show()
+    plt.savefig("out.png")
 one_hot_encoding = {(0,0,1), (0,1,0), (1,0,0)}
 colors = len(one_hot_encoding)
 csp = dwavebinarycsp.ConstraintSatisfactionProblem(dwavebinarycsp.BINARY)
