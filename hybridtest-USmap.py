@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import pickle
 from pprint import pprint
+import hybrid
+hybrid.logger.setLevel(hybrid.logging.DEBUG) 
 
 def backup(expName, samples):
 
@@ -73,29 +75,17 @@ for neighbor in edges:
 
 bqm = dwavebinarycsp.stitch(csp)
 
-"""    
-sampler = DWaveSampler(solver={'topology__type': 'pegasus'})
-embedding = EmbeddingComposite(sampler)
-sampleset = embedding.sample(bqm, num_reads=1000)
+workflow = hybrid.Loop(
+    hybrid.RacingBranches(
+        hybrid.InterruptableTabuSampler(max_time=0),
+        hybrid.EnergyImpactDecomposer(size=100, rolling=True, rolling_history=0.3) | hybrid.QPUSubproblemAutoEmbeddingSampler(num_reads=1)| hybrid.SplatComposer()
+    )| hybrid.ArgMin() ,
+    convergence=3 
+)
 
-backup("US Map Pegasus",sampleset)
-
-for sample in sampleset: 
-    if csp.check(sample): # works with the simulator...
-        print("OK!")
-        plot_map(sample)
-        break
-    print("Bad sample!")
-"""
-
-with open("US Map Pegasus2020-10-31 19_15_49.930767", "rb") as f:
-    sampleset = pickle.load(f)
-#sampleset = SimulatedAnnealingSampler().sample(bqm, num_reads=100)
-decoded = sampleset.data(['sample', 'energy'], sorted_by='energy')
-i=0
-for datum in decoded:
-    #pprint(datum.sample)
-    #print(f'energy={datum.energy}')
-    i += 1
-print(i)
-# decision version of the partitioning problemm: does there exist a partition?
+result = hybrid.HybridSampler(workflow).sample(bqm)
+hybrid.Unwind(workflow)
+print("Solution: sample={}".format(result.first))
+hybrid.print_structure(workflow)
+print("-----------------------")
+hybrid.print_counters(workflow)

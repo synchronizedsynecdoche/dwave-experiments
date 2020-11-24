@@ -56,7 +56,7 @@ bqm = model.to_bqm()
 sampler = DWaveSampler(solver={'topology__type': 'pegasus'})
 embedded = EmbeddingComposite(sampler)
 print("embedding and sampling...")
-sampleset = SimulatedAnnealingSampler().sample(bqm, num_reads=10000)
+sampleset = embedded.sample(bqm, num_reads=10000)
 #backup("knapsack inside sum fixed", "Pegasus", sampleset)
 best = min(model.decode_sampleset(sampleset), key=lambda x: x.energy)
 
