@@ -1,5 +1,5 @@
 # Ising formulations of many NP problems 2.1
-from dwave.system import DWaveSampler, EmbeddingComposite
+from dwave.system import DWaveSampler, EmbeddingComposite, SimulatedAnnealer
 from pyqubo import Spin
 import pickle
 from datetime import datetime
